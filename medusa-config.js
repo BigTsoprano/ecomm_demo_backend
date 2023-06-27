@@ -29,7 +29,7 @@ const ADMIN_CORS =
 const STORE_CORS = process.env.STORE_CORS || "http://localhost:8000";
 
 const DATABASE_URL =
-  process.env.DATABASE_URL || "postgres://localhost/medusa-store";
+  process.env.DATABASE_URL || "postgres://shanon:1994@localhost:5432/medusa-store";
 
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 
@@ -43,17 +43,64 @@ const plugins = [
     },
   },
   // To enable the admin plugin, uncomment the following lines and run `yarn add @medusajs/admin`
-  // {
-  //   resolve: "@medusajs/admin",
-  //   /** @type {import('@medusajs/admin').PluginOptions} */
-  //   options: {
-  //     autoRebuild: true,
-  //   },
-  // },
+  {
+    resolve: "@medusajs/admin",
+    /** @type {import('@medusajs/admin').PluginOptions} */
+    options: {
+      autoRebuild: true,
+    },
+  },
+  {
+    resolve: "medusa-plugin-algolia",
+    options: {
+      applicationId: "ADLGOXWA26",
+      adminApiKey: "957b8947b95e58f1dba5c7f107c7338c",
+      settings: {
+        products: {
+          indexSettings: {
+            searchableAttributes: ["title", "description"],
+            attributesToRetrieve: [
+         
+              "title",
+              "description",
+              "handle",
+              "thumbnail",
+              "images",
+             "objectID",
+              "tags"
+            ],
+          },
+
+          transformer: (product) => ({
+            
+              objectID: product.id,
+              description: product.description,
+              title: product.title,
+              handle: product.handle,
+              thumbnail: product.thumbnail,
+          
+              tags: product.tags,
+              images: product.images
+            }),
+          
+        },
+      },
+    },
+  },
+  {
+    resolve: `medusa-file-s3`,
+    options: {
+        s3_url: process.env.S3_URL,
+        bucket: process.env.S3_BUCKET,
+        region: process.env.S3_REGION,
+        access_key_id: process.env.S3_ACCESS_KEY_ID,
+        secret_access_key: process.env.S3_SECRET_ACCESS_KEY,
+    },
+  },
 ];
 
 const modules = {
-  /*eventBus: {
+  eventBus: {
     resolve: "@medusajs/event-bus-redis",
     options: {
       redisUrl: REDIS_URL
@@ -64,7 +111,7 @@ const modules = {
     options: {
       redisUrl: REDIS_URL
     }
-  },*/
+  },
 };
 
 /** @type {import('@medusajs/medusa').ConfigModule["projectConfig"]} */
@@ -75,7 +122,7 @@ const projectConfig = {
   database_url: DATABASE_URL,
   admin_cors: ADMIN_CORS,
   // Uncomment the following lines to enable REDIS
-  // redis_url: REDIS_URL
+   redis_url: REDIS_URL
 };
 
 /** @type {import('@medusajs/medusa').ConfigModule} */
