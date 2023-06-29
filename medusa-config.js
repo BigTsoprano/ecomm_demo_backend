@@ -51,6 +51,18 @@ const plugins = [
     },
   },
   {
+    resolve: `medusa-file-s3`,
+    options: {
+        s3_url: process.env.S3_URL || "https://medusa-server-ninjas.s3.us-east-1.amazonaws.com",
+        bucket: process.env.S3_BUCKET || "medusa-server-ninjas",
+ 
+          region: process.env.S3_REGION || "us-east-1",
+          access_key_id: process.env.S3_ACCESS_KEY_ID || "AKIA6N2YKPVYXFN4RNSF",
+          secret_access_key: process.env.S3_SECRET_ACCESS_KEY || "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",
+ 
+    },
+  },
+  {
     resolve: "medusa-plugin-algolia",
     options: {
       applicationId: "ADLGOXWA26",
@@ -87,18 +99,8 @@ const plugins = [
       },
     },
   },
-  {
-    resolve: `medusa-file-s3`,
-    options: {
-        s3_url: process.env.S3_URL,
-        bucket: process.env.S3_BUCKET,
-        aws_config_object: {
-          region: process.env.S3_REGION,
-          access_key_id: process.env.S3_ACCESS_KEY_ID,
-          secret_access_key: process.env.S3_SECRET_ACCESS_KEY,
-        },
-    },
-  },
+  
+ 
 ];
 
 const modules = {
